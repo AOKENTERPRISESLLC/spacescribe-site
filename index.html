@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>spacescribe.sol</title>
+
+  <meta name="description" content="spacescribe.sol">
+  <meta name="theme-color" content="#d0cdac">
+
+  <meta property="og:title" content="spacescribe.sol">
+  <meta property="og:description" content="—">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://spacescribe.sol.site/">
+  <meta property="og:image" content="https://spacescribe.sol.site/assets/scribe-collage-1200.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="spacescribe.sol">
+  <meta name="twitter:description" content="—">
+  <meta name="twitter:image" content="https://spacescribe.sol.site/assets/scribe-collage-1200.png">
+  <meta name="twitter:creator" content="@oldmanstillcan">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='30' fill='%23000'/><circle cx='32' cy='32' r='10' fill='%23f4c842'/></svg>">
+
+  <style>
+    :root {
+      /* paper matched to the collage background so the seal sits on the same sheet */
+      --paper:      #d0cdac;
+      --paper-soft: #c9c6a6;
+      --ink:        #141210;
+      --ink-soft:   #33302a;
+      --ink-dim:    #6e6b5a;
+      --rule:       #a9a689;
+      --accent:     #8a1d20;
+
+      --display: "Instrument Serif", "GT Super", "Times New Roman", serif;
+      --mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+      --gutter: clamp(1.25rem, 4vw, 3rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--display);
+      font-size: 1.0625rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+
+      /* faint paper grain on the same warm cream as the collage */
+      background-image:
+        radial-gradient(circle at 25% 22%, rgba(60, 40, 20, 0.04), transparent 55%),
+        radial-gradient(circle at 78% 80%, rgba(0, 0, 0, 0.035), transparent 60%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 0 0.02 0 0 0 0.055 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: auto, auto, 220px 220px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── Masthead (minimal) ─── */
+
+    .crown {
+      padding: 1rem var(--gutter);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .crown .left  { display: inline-flex; gap: 0.5rem; align-items: baseline; }
+    .crown .left::before {
+      content: "";
+      display: inline-block;
+      width: 0.45em;
+      height: 0.45em;
+      background: var(--ink);
+      vertical-align: 0.15em;
+    }
+
+    .crown .right { color: var(--ink-dim); }
+
+    @media (max-width: 520px) {
+      .crown { font-size: 0.625rem; letter-spacing: 0.14em; padding: 0.75rem 1rem; }
+    }
+
+    /* ─── Seal (the hero) ─── */
+
+    .stage {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: clamp(1.5rem, 5vw, 3rem) var(--gutter);
+      position: relative;
+    }
+
+    .seal {
+      position: relative;
+      width: min(78vmin, 640px);
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .seal-art {
+      /* Collage sits slightly inset — the ring text has breathing room outside */
+      width: 72%;
+      height: 72%;
+      object-fit: contain;
+      filter: drop-shadow(0 1.5rem 2.5rem rgba(20, 14, 8, 0.18))
+              drop-shadow(0 0.5rem 0.75rem rgba(20, 14, 8, 0.12));
+      user-select: none;
+      -webkit-user-drag: none;
+      z-index: 2;
+    }
+
+    .seal-ring {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* continuous slow rotation — scribe's wheel */
+    @keyframes turn { to { transform: rotate(360deg); } }
+    .seal-ring.rotating { animation: turn 84s linear infinite; transform-origin: 50% 50%; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .seal-ring.rotating { animation: none; }
+    }
+
+    .seal-ring text {
+      font-family: var(--display);
+      font-size: 5.2px;           /* SVG viewBox-relative */
+      font-style: normal;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      fill: var(--ink);
+    }
+
+    .seal-ring .dot { fill: var(--accent); }
+
+    /* ─── Plinth (tiny block below the seal) ─── */
+
+    .plinth {
+      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      text-align: center;
+      max-width: 32rem;
+    }
+
+    .plinth .beat {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+    }
+
+    .plinth .beat::before {
+      content: "";
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 var(--accent);
+      animation: beacon 2.2s ease-out infinite;
+    }
+
+    @keyframes beacon {
+      0%   { box-shadow: 0 0 0 0 rgba(138, 29, 32, 0.55); }
+      80%  { box-shadow: 0 0 0 0.65em rgba(138, 29, 32, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(138, 29, 32, 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .plinth .beat::before { animation: none; }
+    }
+
+    .plinth .line {
+      margin-top: 1.25rem;
+      font-style: italic;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      color: var(--ink-soft);
+      letter-spacing: -0.005em;
+    }
+
+    .plinth .dm {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      margin-top: 1.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding: 0.1em 0 0.25em;
+      border-bottom: 1px solid var(--ink);
+      transition: color 160ms ease, border-color 160ms ease, transform 220ms cubic-bezier(.4,0,.2,1);
+    }
+
+    .plinth .dm .arrow {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 1.15em;
+      line-height: 0;
+      transition: transform 220ms cubic-bezier(.4,0,.2,1);
+    }
+
+    .plinth .dm:hover,
+    .plinth .dm:focus-visible {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      outline: none;
+    }
+
+    .plinth .dm:hover .arrow,
+    .plinth .dm:focus-visible .arrow { transform: translateX(4px); }
+
+    /* ─── Colophon (tiny footer) ─── */
+
+    .colophon {
+      padding: 1rem var(--gutter);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      border-top: 1px solid var(--rule);
+    }
+
+    .colophon a {
+      border-bottom: 1px dotted var(--ink-dim);
+      transition: color 160ms ease, border-color 160ms ease;
+    }
+
+    .colophon a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+    /* ─── Entrance choreography ─── */
+
+    .fade { opacity: 0; transform: translateY(0.5rem); animation: rise 900ms cubic-bezier(.2,.7,.2,1) forwards; }
+    .fade-1 { animation-delay: 80ms; }
+    .fade-2 { animation-delay: 260ms; }
+    .fade-3 { animation-delay: 480ms; }
+    .fade-4 { animation-delay: 640ms; }
+
+    .seal-art,
+    .seal-ring { opacity: 0; }
+
+    .seal-art  { animation: rise 1100ms cubic-bezier(.2,.7,.2,1) 360ms forwards; }
+    .seal-ring { animation: rise 1100ms cubic-bezier(.2,.7,.2,1) 560ms forwards; }
+
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade, .seal-art, .seal-ring { animation: none; opacity: 1; transform: none; }
+    }
+
+    ::selection { background: var(--ink); color: var(--paper); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  </style>
+</head>
+
+<body>
+
+  <header class="crown fade fade-1">
+    <span class="left">spacescribe.sol</span>
+    <span class="right">MMXXVI · In Development</span>
+  </header>
+
+  <main class="stage">
+
+    <figure class="seal" aria-label="SpaceScribe seal">
+
+      <!-- The collage artwork (full-res fallback + web-optimized primary) -->
+      <img
+        class="seal-art"
+        src="assets/scribe-collage-1200.png"
+        srcset="assets/scribe-collage-1200.png 1200w, assets/scribe-collage.png 1858w"
+        sizes="(max-width: 640px) 72vmin, 460px"
+        alt="SpaceScribe"
+        decoding="async">
+
+      <!-- Circular wordmark wrapping the art -->
+      <svg class="seal-ring rotating" viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <!-- Outer circular path — letters ride the rim just outside the art -->
+          <path id="ring" d="M 50,50 m -47,0 a 47,47 0 1,1 94,0 a 47,47 0 1,1 -94,0" fill="none" />
+        </defs>
+        <text>
+          <textPath href="#ring" startOffset="0%">
+            SPACESCRIBE <tspan class="dot">✦</tspan> SPACESCRIBE <tspan class="dot">✦</tspan> SPACESCRIBE <tspan class="dot">✦</tspan> SPACESCRIBE <tspan class="dot">✦</tspan>
+          </textPath>
+        </text>
+      </svg>
+
+    </figure>
+
+    <div class="plinth">
+      <span class="beat fade fade-3">Filing Q2 · MMXXVI</span>
+      <p class="line fade fade-4">Something is being scribed.</p>
+      <a class="dm fade fade-4" href="https://x.com/oldmanstillcan" target="_blank" rel="noopener">
+        <span>DM @oldmanstillcan</span><span class="arrow">→</span>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="colophon fade fade-4">
+    <span>AOK Enterprises LLC · MMXXVI</span>
+    <a href="https://aokenterprises.com" target="_blank" rel="noopener">aokenterprises.com</a>
+  </footer>
+
+</body>
+</html>
