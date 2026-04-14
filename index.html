@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>spacescribe.sol</title>
+  <title>SpaceScribe</title>
 
-  <meta name="description" content="spacescribe.sol">
+  <meta name="description" content="SpaceScribe — AI-scribed X Spaces. Two independent capture engines. Your content ships no matter what.">
   <meta name="theme-color" content="#0a0814">
 
-  <meta property="og:title" content="spacescribe.sol">
-  <meta property="og:description" content="—">
+  <meta property="og:title" content="SpaceScribe">
+  <meta property="og:description" content="AI-scribed X Spaces. Two independent capture engines. Your content ships no matter what.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://spacescribe.sol.site/">
-  <meta property="og:image" content="https://spacescribe.sol.site/assets/space-scribe2-1200.png">
+  <meta property="og:url" content="https://spacescribe.app/">
+  <meta property="og:image" content="https://spacescribe.app/assets/space-scribe4-1200.png">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="spacescribe.sol">
-  <meta name="twitter:description" content="—">
-  <meta name="twitter:image" content="https://spacescribe.sol.site/assets/space-scribe2-1200.png">
+  <meta name="twitter:title" content="SpaceScribe">
+  <meta name="twitter:description" content="AI-scribed X Spaces. Two independent capture engines. Your content ships no matter what.">
+  <meta name="twitter:image" content="https://spacescribe.app/assets/space-scribe4-1200.png">
   <meta name="twitter:creator" content="@oldmanstillcan">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +75,7 @@
       overflow-x: hidden;
     }
 
-    /* ─── Cosmos (full-page starfield) ─── */
+    /* ─── Cosmos (full-page outward-drift starfield via canvas) ─── */
 
     .cosmos {
       position: fixed;
@@ -85,144 +85,16 @@
       overflow: hidden;
     }
 
-    .cosmos .field {
-      position: absolute;
-      inset: -20%;
-      background-repeat: repeat;
-      background-size: 320px 320px;
-      will-change: transform;
-    }
-
-    .cosmos .field.far {
-      background-image:
-        radial-gradient(0.9px 0.9px at 20px 32px,  rgba(255,255,255,0.7),  transparent 60%),
-        radial-gradient(0.7px 0.7px at 80px 108px, rgba(255,246,214,0.55), transparent 60%),
-        radial-gradient(0.8px 0.8px at 148px 48px, rgba(255,255,255,0.5),  transparent 60%),
-        radial-gradient(0.6px 0.6px at 200px 200px, rgba(255,255,255,0.5), transparent 60%),
-        radial-gradient(0.7px 0.7px at 256px 96px, rgba(226,232,255,0.5),  transparent 60%),
-        radial-gradient(0.9px 0.9px at 60px 240px,  rgba(255,246,214,0.6),  transparent 60%),
-        radial-gradient(0.6px 0.6px at 288px 280px, rgba(255,255,255,0.4), transparent 60%),
-        radial-gradient(0.8px 0.8px at 112px 180px, rgba(255,255,255,0.5), transparent 60%);
-      opacity: 0.75;
-      animation: drift-far 180s linear infinite;
-    }
-
-    .cosmos .field.mid {
-      background-image:
-        radial-gradient(1.1px 1.1px at 50px 60px,   rgba(255,255,255,0.85), transparent 58%),
-        radial-gradient(0.9px 0.9px at 184px 24px,  rgba(255,238,200,0.75), transparent 58%),
-        radial-gradient(1.2px 1.2px at 240px 160px, rgba(255,255,255,0.8),  transparent 58%),
-        radial-gradient(1.0px 1.0px at 30px 220px,  rgba(200,220,255,0.75), transparent 58%),
-        radial-gradient(1.3px 1.3px at 290px 56px,  rgba(255,255,255,0.85), transparent 58%);
-      opacity: 0.85;
-      animation: drift-mid 96s linear infinite;
-    }
-
-    .cosmos .field.near {
-      background-image:
-        radial-gradient(1.6px 1.6px at 120px 140px, rgba(255,255,255,0.95), transparent 55%),
-        radial-gradient(1.4px 1.4px at 260px 260px, rgba(255,238,200,0.9),  transparent 55%),
-        radial-gradient(1.8px 1.8px at 40px 40px,   rgba(255,255,255,0.95), transparent 55%);
-      opacity: 0.9;
-      animation: drift-near 54s linear infinite;
-    }
-
-    @keyframes drift-far  { to { transform: translate3d(-320px, -190px, 0); } }
-    @keyframes drift-mid  { to { transform: translate3d(280px, -320px, 0); } }
-    @keyframes drift-near { to { transform: translate3d(-220px, 320px, 0); } }
-
-    /* Twinkle layer — localized breathing stars */
-    .cosmos .twinkle {
+    .cosmos canvas {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(1.8px 1.8px at 22% 28%, #fff, transparent 50%),
-        radial-gradient(1.4px 1.4px at 68% 18%, #ffe7b3, transparent 50%),
-        radial-gradient(1.6px 1.6px at 82% 62%, #fff, transparent 50%),
-        radial-gradient(1.4px 1.4px at 16% 72%, #e0eaff, transparent 50%),
-        radial-gradient(1.7px 1.7px at 48% 86%, #fff, transparent 50%);
-      mix-blend-mode: screen;
-      animation: twinkle 3.6s ease-in-out infinite alternate;
-    }
-
-    @keyframes twinkle {
-      0%   { opacity: 0.3; }
-      50%  { opacity: 1; }
-      100% { opacity: 0.45; }
-    }
-
-    /* Warp streaks — stars streaming INWARD from outer edges toward the seal.
-       24 rays at 15° intervals, phased so a new streak fires every ~0.25s from
-       all directions. Faster cycle + thicker streaks + stronger glow = he is
-       decisively coming at you at warp. */
-    .cosmos .warp {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 80vmax; height: 2.2px;
-      transform-origin: 0 50%;              /* pivot at screen center */
-      /* narrow bright streak with trailing tail pointing outward */
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 1) 4%,          /* sharp head */
-        rgba(255, 245, 210, 1) 8%,
-        rgba(255, 210, 150, 0.85) 13%,      /* warm plasma tail */
-        rgba(255, 235, 190, 0.5) 22%,
-        transparent 38%,
-        transparent 100%);
-      background-repeat: no-repeat;
-      background-size: 200% 100%;
-      background-position: 200% 0;
-      opacity: 0;
-      border-radius: 3px;
-      filter: blur(0.4px);
-      box-shadow:
-        0 0 8px rgba(255, 240, 200, 0.7),
-        0 0 18px rgba(255, 200, 120, 0.35);
-    }
-
-    /* 24 streaks at 15° intervals, 6s cycle with 0.25s offsets */
-    .cosmos .warp.w01 { transform: rotate(0deg);   animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 0s    infinite; }
-    .cosmos .warp.w02 { transform: rotate(15deg);  animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 0.25s infinite; }
-    .cosmos .warp.w03 { transform: rotate(30deg);  animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 0.5s  infinite; }
-    .cosmos .warp.w04 { transform: rotate(45deg);  animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 0.75s infinite; }
-    .cosmos .warp.w05 { transform: rotate(60deg);  animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 1s    infinite; }
-    .cosmos .warp.w06 { transform: rotate(75deg);  animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 1.25s infinite; }
-    .cosmos .warp.w07 { transform: rotate(90deg);  animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 1.5s  infinite; }
-    .cosmos .warp.w08 { transform: rotate(105deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 1.75s infinite; }
-    .cosmos .warp.w09 { transform: rotate(120deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 2s    infinite; }
-    .cosmos .warp.w10 { transform: rotate(135deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 2.25s infinite; }
-    .cosmos .warp.w11 { transform: rotate(150deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 2.5s  infinite; }
-    .cosmos .warp.w12 { transform: rotate(165deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 2.75s infinite; }
-    .cosmos .warp.w13 { transform: rotate(180deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 3s    infinite; }
-    .cosmos .warp.w14 { transform: rotate(195deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 3.25s infinite; }
-    .cosmos .warp.w15 { transform: rotate(210deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 3.5s  infinite; }
-    .cosmos .warp.w16 { transform: rotate(225deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 3.75s infinite; }
-    .cosmos .warp.w17 { transform: rotate(240deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 4s    infinite; }
-    .cosmos .warp.w18 { transform: rotate(255deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 4.25s infinite; }
-    .cosmos .warp.w19 { transform: rotate(270deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 4.5s  infinite; }
-    .cosmos .warp.w20 { transform: rotate(285deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 4.75s infinite; }
-    .cosmos .warp.w21 { transform: rotate(300deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 5s    infinite; }
-    .cosmos .warp.w22 { transform: rotate(315deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 5.25s infinite; }
-    .cosmos .warp.w23 { transform: rotate(330deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 5.5s  infinite; }
-    .cosmos .warp.w24 { transform: rotate(345deg); animation: warp-in 6s cubic-bezier(.3,.0,.95,.5) 5.75s infinite; }
-
-    @keyframes warp-in {
-      0%    { opacity: 0;    background-position: 215% 0;   filter: blur(0.9px); }
-      4%    { opacity: 0.9;  background-position: 190% 0;   filter: blur(0.5px); }
-      14%   { opacity: 1;    background-position: 130% 0;   filter: blur(0.3px); }
-      40%   { opacity: 1;    background-position: 50% 0;    filter: blur(0.25px); }
-      70%   { opacity: 0.45; background-position: 0% 0;     filter: blur(0.35px); }
-      82%   { opacity: 0;    background-position: -25% 0;   filter: blur(0.6px); }
-      100%  { opacity: 0;    background-position: -40% 0; }
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     /* Body content sits above the cosmos */
     .crown, main, .colophon { position: relative; z-index: 1; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .cosmos .field, .cosmos .twinkle { animation: none; }
-      .cosmos .warp { display: none; }
-    }
 
     a { color: inherit; text-decoration: none; }
 
@@ -263,13 +135,13 @@
       flex: 1;
       display: grid;
       place-items: center;
-      padding: clamp(1.5rem, 5vw, 3rem) var(--gutter);
+      padding: clamp(0.75rem, 2.5vw, 1.5rem) var(--gutter);
       position: relative;
     }
 
     .seal {
       position: relative;
-      width: min(78vmin, 640px);
+      width: min(68vmin, 560px);
       aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
@@ -291,9 +163,9 @@
     }
 
     .seal-art {
-      /* Collage sits slightly inset — the ring text has breathing room outside */
-      width: 72%;
-      height: 72%;
+      /* Art sits inset — ring text buffers outside. Tuned for space-scribe2.png. */
+      width: 76%;
+      height: 76%;
       object-fit: contain;
       filter: drop-shadow(0 1.5rem 2.5rem rgba(0, 0, 0, 0.55))
               drop-shadow(0 0.5rem 0.75rem rgba(0, 0, 0, 0.4));
@@ -333,7 +205,7 @@
     /* ─── Plinth (tiny block below the seal) ─── */
 
     .plinth {
-      margin-top: clamp(1.5rem, 4vw, 2.5rem);
+      margin-top: clamp(0.5rem, 1.5vw, 1rem);
       text-align: center;
       max-width: 36rem;
     }
@@ -370,7 +242,7 @@
     }
 
     .plinth .line {
-      margin: 1.5rem 0 0;
+      margin: 0.75rem 0 0;
       font-style: italic;
       font-size: clamp(1.625rem, 4.5vw, 2.5rem);
       line-height: 1.15;
@@ -382,7 +254,7 @@
       display: inline-flex;
       align-items: baseline;
       gap: 0.4rem;
-      margin-top: 1.75rem;
+      margin-top: 1rem;
       font-family: var(--mono);
       font-size: 0.75rem;
       letter-spacing: 0.18em;
@@ -480,24 +352,13 @@
 <body>
 
   <header class="crown fade fade-1">
-    <span class="left">spacescribe.sol</span>
+    <span class="left">spacescribe.app</span>
     <span class="right">MMXXVI · In Motion</span>
   </header>
 
-  <!-- Full-page cosmos: three parallax star layers + twinkle + 24 warp streaks -->
+  <!-- Full-page cosmos: canvas starfield drifting outward from center -->
   <div class="cosmos" aria-hidden="true">
-    <div class="field far"></div>
-    <div class="field mid"></div>
-    <div class="field near"></div>
-    <div class="twinkle"></div>
-    <div class="warp w01"></div><div class="warp w02"></div><div class="warp w03"></div>
-    <div class="warp w04"></div><div class="warp w05"></div><div class="warp w06"></div>
-    <div class="warp w07"></div><div class="warp w08"></div><div class="warp w09"></div>
-    <div class="warp w10"></div><div class="warp w11"></div><div class="warp w12"></div>
-    <div class="warp w13"></div><div class="warp w14"></div><div class="warp w15"></div>
-    <div class="warp w16"></div><div class="warp w17"></div><div class="warp w18"></div>
-    <div class="warp w19"></div><div class="warp w20"></div><div class="warp w21"></div>
-    <div class="warp w22"></div><div class="warp w23"></div><div class="warp w24"></div>
+    <canvas id="starfield"></canvas>
   </div>
 
   <main class="stage">
@@ -507,8 +368,8 @@
       <!-- The artwork (full-res fallback + web-optimized primary) -->
       <img
         class="seal-art breathe"
-        src="assets/space-scribe2-1200.png"
-        srcset="assets/space-scribe2-1200.png 1200w, assets/space-scribe2.png 2400w"
+        src="assets/space-scribe4-1200.png"
+        srcset="assets/space-scribe4-1200.png 1200w, assets/space-scribe4.png 2400w"
         sizes="(max-width: 640px) 72vmin, 460px"
         alt="SpaceScribe"
         decoding="async">
@@ -517,7 +378,7 @@
       <svg class="seal-ring rotating" viewBox="0 0 100 100" aria-hidden="true">
         <defs>
           <!-- Outer circular path — letters ride the rim just outside the art -->
-          <path id="ring" d="M 50,50 m -47,0 a 47,47 0 1,1 94,0 a 47,47 0 1,1 -94,0" fill="none" />
+          <path id="ring" d="M 50,50 m -48.5,0 a 48.5,48.5 0 1,1 97,0 a 48.5,48.5 0 1,1 -97,0" fill="none" />
         </defs>
         <text>
           <textPath href="#ring" startOffset="0%">
@@ -542,6 +403,93 @@
     <span>AOK Enterprises LLC · MMXXVI</span>
     <a href="https://aokenterprises.com" target="_blank" rel="noopener">aokenterprises.com</a>
   </footer>
+
+  <script>
+    // ─── Inward-drift starfield — stars flowing toward the scribe ───
+    // Stars live in polar coords (angle + distance from center); they spawn
+    // near the outer edge and drift INWARD, trailing behind as they approach
+    // the seal. Each frame paints a semi-opaque void fill, which fades prior
+    // positions into a soft motion trail pointing away from center.
+    //
+    // The seal becomes the gravity well — the cosmos falls toward it.
+    (function(){
+      const canvas = document.getElementById('starfield');
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      let w, h, maxDist;
+      function resize(){
+        w = window.innerWidth;
+        h = window.innerHeight;
+        maxDist = Math.hypot(w, h) / 2 + 60;
+        canvas.width  = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width  = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const SEAL_RADIUS = 30;  // dist at which a star is "consumed" by the seal
+
+      class Star {
+        constructor(warm){ this.warm = warm; this.reset(true); }
+        reset(initial){
+          this.angle = Math.random() * Math.PI * 2;
+          // initial=true spreads stars across the field on first load so the
+          // scene starts populated; otherwise respawn at the outer edge.
+          this.dist  = initial
+            ? Math.random() * (maxDist - SEAL_RADIUS) + SEAL_RADIUS
+            : maxDist - Math.random() * 40;
+          this.speed = Math.random() * 1.6 + 0.8;
+          this.size  = Math.random() * 1.6 + 0.5;
+        }
+        update(){
+          this.dist -= this.speed;        // inward
+          if (this.dist < SEAL_RADIUS) this.reset(false);
+        }
+        draw(){
+          const x = w/2 + Math.cos(this.angle) * this.dist;
+          const y = h/2 + Math.sin(this.angle) * this.dist;
+          // Fade in as stars approach — they become visible mid-flight and
+          // brighten on approach, then vanish behind the seal at SEAL_RADIUS.
+          const ratio = this.dist / maxDist;
+          const alpha = Math.max(0.1, 1 - ratio * 0.9);
+          ctx.fillStyle = this.warm
+            ? 'rgba(255, 240, 200, ' + alpha + ')'
+            : 'rgba(235, 240, 255, ' + alpha + ')';
+          ctx.fillRect(x, y, this.size, this.size);
+        }
+      }
+
+      // Density based on viewport; capped for perf on large screens
+      const count = Math.min(900, Math.floor(w * h / 2000));
+      const stars = [];
+      for (let i = 0; i < count; i++) stars.push(new Star(i % 4 === 0));
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function tick(){
+        // light trail fade in the void base color — trails point outward
+        // (away from center), reinforcing the inbound direction
+        ctx.fillStyle = 'rgba(10, 8, 20, 0.22)';
+        ctx.fillRect(0, 0, w, h);
+        for (const s of stars){ s.update(); s.draw(); }
+        requestAnimationFrame(tick);
+      }
+
+      if (!reduced) {
+        tick();
+      } else {
+        // Reduced motion: static starfield, no drift
+        ctx.fillStyle = '#0a0814';
+        ctx.fillRect(0, 0, w, h);
+        for (const s of stars) s.draw();
+      }
+    })();
+  </script>
 
 </body>
 </html>
